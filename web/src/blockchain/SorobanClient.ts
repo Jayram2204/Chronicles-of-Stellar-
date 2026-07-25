@@ -160,7 +160,7 @@ class SorobanClient {
           args,
         })
       )
-      .setTimeout(30)
+      .setTimeout(180)
       .build();
 
     const simulated = await this.server.simulateTransaction(transaction);
@@ -179,7 +179,10 @@ class SorobanClient {
     args: xdr.ScVal[]
   ): Promise<any> {
     const walletState = walletConnector.getState();
-    const accountResponse = await this.server.getAccount(walletState.publicKey!);
+    if (!walletState.publicKey) {
+      throw new Error('Wallet not connected');
+    }
+    const accountResponse = await this.server.getAccount(walletState.publicKey);
 
     const txBuilding = new TransactionBuilder(accountResponse, {
       fee: BASE_FEE,
@@ -192,7 +195,7 @@ class SorobanClient {
           args,
         })
       )
-      .setTimeout(30)
+      .setTimeout(180)
       .build();
 
     const simulated = await this.server.simulateTransaction(txBuilding);

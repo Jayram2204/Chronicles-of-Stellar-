@@ -145,6 +145,10 @@ class PvpArena extends Renderer {
     this.statusText.setText('Connecting to contract...');
     this.statusText.tint = 0xffaa00;
 
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Transaction timed out after 90s')), 90000)
+    );
+
     try {
       const { createBoutWithFreighter, getContractId } = await import('../../blockchain/PvPEscrow');
       const contractId = getContractId();
@@ -156,7 +160,10 @@ class PvpArena extends Renderer {
         return;
       }
 
-      const txHash = await createBoutWithFreighter(1);
+      const txHash = await Promise.race([
+        createBoutWithFreighter(1),
+        timeout,
+      ]);
       this.statusText.setText('BOUT CREATED! TX: ' + txHash.substring(0, 10) + '...');
       this.statusText.tint = 0x00ff88;
 
@@ -171,6 +178,8 @@ class PvpArena extends Renderer {
         this.statusText.setText('DEPLOY CONTRACT FIRST');
       } else if (msg.includes('User declined') || msg.includes('rejected')) {
         this.statusText.setText('TRANSACTION CANCELLED');
+      } else if (msg.includes('timed out')) {
+        this.statusText.setText('TIMEOUT - CHECK WALLET & RETRY');
       } else {
         this.statusText.setText('ERROR: ' + msg.substring(0, 30));
       }
@@ -184,6 +193,10 @@ class PvpArena extends Renderer {
     this._busy = true;
     this.statusText.setText('Fetching open bouts...');
     this.statusText.tint = 0xffaa00;
+
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Transaction timed out after 90s')), 90000)
+    );
 
     try {
       const { getOpenBouts, acceptBoutWithFreighter, getContractId } = await import('../../blockchain/PvPEscrow');
@@ -205,12 +218,14 @@ class PvpArena extends Renderer {
         return;
       }
 
-      // Auto-join the first open bout
       const bout = bouts[0];
       this.statusText.setText('JOINING BOUT #' + bout.id + '...');
       this.statusText.tint = 0xffaa00;
 
-      const txHash = await acceptBoutWithFreighter(bout.id);
+      const txHash = await Promise.race([
+        acceptBoutWithFreighter(bout.id),
+        timeout,
+      ]);
       this.statusText.setText('JOINED! FIGHT! TX: ' + txHash.substring(0, 10) + '...');
       this.statusText.tint = 0x00ff88;
 
@@ -225,6 +240,8 @@ class PvpArena extends Renderer {
         this.statusText.setText('DEPLOY CONTRACT FIRST');
       } else if (msg.includes('User declined') || msg.includes('rejected')) {
         this.statusText.setText('TRANSACTION CANCELLED');
+      } else if (msg.includes('timed out')) {
+        this.statusText.setText('TIMEOUT - CHECK WALLET & RETRY');
       } else {
         this.statusText.setText('ERROR: ' + msg.substring(0, 30));
       }

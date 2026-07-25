@@ -75,19 +75,14 @@ function getServer() {
 
 export async function signAndSubmitWithFreighter(
   method: string,
-  args: xdr.ScVal[]
+  args: xdr.ScVal[],
+  preloadedAddress?: string
 ): Promise<string> {
   if (!CONTRACT_ID) throw new Error('Contract not deployed. Set VITE_SOROBAN_CONTRACT_ID.');
 
   const sorobanRpc = getServer();
   const contract = new Contract(CONTRACT_ID);
-  const addressResult = await getAddress();
-
-  if (addressResult.error) {
-    throw new Error(`Freighter error: ${JSON.stringify(addressResult.error)}`);
-  }
-
-  const publicKey = addressResult.address;
+  const publicKey = preloadedAddress || (await getAddress()).address;
   const account = await sorobanRpc.getAccount(publicKey);
 
   const txBuilder = new TransactionBuilder(account, {
@@ -172,7 +167,8 @@ export async function createBoutWithFreighter(betAmountXlm: number): Promise<str
 
   return signAndSubmitWithFreighter(
     'create_bout',
-    [toScAddress(addressResult.address), toU64(betAmountXlm)]
+    [toScAddress(addressResult.address), toU64(betAmountXlm)],
+    addressResult.address
   );
 }
 
@@ -182,7 +178,8 @@ export async function acceptBoutWithFreighter(boutId: number): Promise<string> {
 
   return signAndSubmitWithFreighter(
     'accept_bout',
-    [toScAddress(addressResult.address), toU32(boutId)]
+    [toScAddress(addressResult.address), toU32(boutId)],
+    addressResult.address
   );
 }
 
@@ -192,7 +189,8 @@ export async function submitScoreWithFreighter(boutId: number, score: number): P
 
   return signAndSubmitWithFreighter(
     'submit_score',
-    [toScAddress(addressResult.address), toU32(boutId), toU32(score)]
+    [toScAddress(addressResult.address), toU32(boutId), toU32(score)],
+    addressResult.address
   );
 }
 
@@ -211,7 +209,8 @@ export async function getBout(boutId: number): Promise<BoutResult | null> {
       winner: result.winner?.toString() || null,
       created_at: Number(result.created_at || 0),
     };
-  } catch {
+  } catch (err) {
+    console.error('[PvPEscrow] getBout failed:', err);
     return null;
   }
 }
@@ -231,7 +230,8 @@ export async function getOpenBouts(): Promise<BoutResult[]> {
       winner: bout.winner?.toString() || null,
       created_at: Number(bout.created_at || 0),
     }));
-  } catch {
+  } catch (err) {
+    console.error('[PvPEscrow] getOpenBouts failed:', err);
     return [];
   }
 }
@@ -243,7 +243,8 @@ export async function createBotBoutWithFreighter(betAmountXlm: number, timeLimit
 
   return signAndSubmitWithFreighter(
     'create_bot_bout',
-    [toScAddress(addressResult.address), toU64(betAmountXlm), toU64(timeLimit)]
+    [toScAddress(addressResult.address), toU64(betAmountXlm), toU64(timeLimit)],
+    addressResult.address
   );
 }
 
@@ -253,7 +254,8 @@ export async function resolveBotBoutWithFreighter(boutId: number, score: number,
 
   return signAndSubmitWithFreighter(
     'resolve_bot_bout',
-    [toScAddress(addressResult.address), toU32(boutId), toU32(score), toU64(completionTime)]
+    [toScAddress(addressResult.address), toU32(boutId), toU32(score), toU64(completionTime)],
+    addressResult.address
   );
 }
 
@@ -272,7 +274,8 @@ export async function getBotBout(boutId: number): Promise<BotBoutResult | null> 
       payout: Number(result.payout || 0),
       created_at: Number(result.created_at || 0),
     };
-  } catch {
+  } catch (err) {
+    console.error('[PvPEscrow] getBotBout failed:', err);
     return null;
   }
 }
@@ -282,7 +285,8 @@ export async function getTreasury(): Promise<number> {
   try {
     const result = await simulateContract('get_treasury', []);
     return Number(result || 0);
-  } catch {
+  } catch (err) {
+    console.error('[PvPEscrow] getTreasury failed:', err);
     return 0;
   }
 }

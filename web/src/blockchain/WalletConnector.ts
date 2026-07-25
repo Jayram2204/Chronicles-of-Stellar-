@@ -117,7 +117,13 @@ class WalletConnector {
 
   public async updateBalance(publicKey: string): Promise<string> {
     try {
-      const account = await this.server.loadAccount(publicKey);
+      const timeout = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Horizon timeout')), 10000)
+      );
+      const account = await Promise.race([
+        this.server.loadAccount(publicKey),
+        timeout,
+      ]);
       const nativeBalance = account.balances.find((b: any) => b.asset_type === 'native');
       const balance = nativeBalance ? parseFloat(nativeBalance.balance).toFixed(2) : '0.00';
       this.state.balance = balance;
