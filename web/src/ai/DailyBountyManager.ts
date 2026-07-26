@@ -1,7 +1,7 @@
 import { EventHub, GameEvents } from '../events/EventHub';
 import { authService } from '../services/authService';
 import { app } from '../services/firebase';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 
 export interface BountyContract {
   id: string;
@@ -21,6 +21,7 @@ export class DailyBountyManager {
   constructor() {
     this.initDailyBounties();
     this.attachGameEventListeners();
+    this.hydrateFromFirestore();
   }
 
   private initDailyBounties() {
@@ -128,6 +129,35 @@ export class DailyBountyManager {
 
   public getBounties(): BountyContract[] {
     return [...this.activeBounties];
+  }
+
+  private async hydrateFromFirestore() {
+    try {
+      const session = authService.getSession();
+      if (!session.user?.id) return;
+
+      const db = getFirestore(app);
+      const snap = await getDoc(doc(db, 'users', session.user.id, 'stats', 'daily_bounties'));
+      if (snap.exists()) {
+        const data = snap.data();
+        if (Array.isArray(data.bounties)) {
+          this.activeBounties = this.activeBounties.map((bounty) => {
+            const saved = data.bounties.find((b: any) => b.id === bounty.id);
+            if (saved) {
+              return {
+                ...bounty,
+                currentCount: saved.currentCount || 0,
+                isCompleted: saved.isCompleted || false,
+              };
+            }
+            return bounty;
+          });
+          console.log('[DailyBountyManager] Hydrated bounty progress from Firestore');
+        }
+      }
+    } catch (e) {
+      console.warn('[DailyBountyManager] Error hydrating bounties from Firestore:', e);
+    }
   }
 }
 
