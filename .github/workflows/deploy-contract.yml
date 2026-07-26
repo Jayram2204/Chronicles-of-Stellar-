@@ -27,8 +27,21 @@ jobs:
       - name: Deploy to ${{ inputs.network }}
         env:
           STELLAR_SECRET_KEY: ${{ secrets.STELLAR_ADMIN_SECRET_KEY }}
+        id: deploy
         run: |
-          stellar contract deploy \
+          CONTRACT_ID=$(stellar contract deploy \
             --wasm target/wasm32-unknown-unknown/release/chronicle_game_state.wasm \
+            --network ${{ inputs.network }} \
+            --source admin 2>&1 | tail -1)
+          echo "contract_id=$CONTRACT_ID" >> "$GITHUB_OUTPUT"
+          echo "Deployed contract: $CONTRACT_ID"
+      - name: Initialize contract
+        env:
+          STELLAR_SECRET_KEY: ${{ secrets.STELLAR_ADMIN_SECRET_KEY }}
+        run: |
+          stellar contract invoke \
+            --id ${{ steps.deploy.outputs.contract_id }} \
+            --fn initialize \
+            --arg admin=${{ secrets.STELLAR_ADMIN_PUBLIC_KEY }} \
             --network ${{ inputs.network }} \
             --source admin

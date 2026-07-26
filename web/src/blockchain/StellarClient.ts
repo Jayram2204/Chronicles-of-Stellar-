@@ -53,6 +53,10 @@ export class StellarClient {
         }
       }
 
+      if (import.meta.env.VITE_STELLAR_NETWORK === 'PUBLIC') {
+        throw new Error('ManageData fallback is disabled on Mainnet. Ensure Soroban contract is deployed.');
+      }
+
       console.log(`[StellarClient] Submitting Horizon ManageData for account: ${publicKey}, action: ${action}`);
       const account = await this.server.loadAccount(publicKey);
 
