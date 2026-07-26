@@ -1,5 +1,8 @@
 import { Component } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
+import { createLogger } from '../services/log';
+
+const log = createLogger('ErrorBoundary');
 
 interface Props {
   children?: ReactNode;
@@ -22,7 +25,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('[ErrorBoundary] Uncaught exception:', error, errorInfo);
+    log.error('Uncaught exception:', error, errorInfo as unknown as string);
   }
 
   public render() {

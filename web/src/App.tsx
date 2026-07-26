@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { GameScreen } from './components/GameScreen';
 import { AuthModal } from './components/AuthModal';
+import { OnboardingOverlay } from './components/OnboardingOverlay';
 import { authService } from './services/authService';
 import type { UserSession } from './services/authService';
+
+const ONBOARDING_KEY = 'cos_onboarding_complete';
 
 function App() {
   const [session, setSession] = useState<UserSession>({
@@ -11,6 +14,9 @@ function App() {
   });
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    return !localStorage.getItem(ONBOARDING_KEY);
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -61,8 +67,14 @@ function App() {
     });
   };
 
+  const handleOnboardingComplete = () => {
+    localStorage.setItem(ONBOARDING_KEY, '1');
+    setShowOnboarding(false);
+  };
+
   return (
     <div className="min-h-screen bg-[#081008] flex flex-col items-center justify-between p-3 lg:p-4 font-mono select-none">
+      {showOnboarding && <OnboardingOverlay onComplete={handleOnboardingComplete} />}
       {/* Top Session Identity Banner */}
       <header className="w-full max-w-[1280px] mb-3 px-4 py-2 bg-[#0f260f] border border-[#2a4a1a] rounded-lg flex justify-between items-center text-xs shadow-[0_0_15px_rgba(15,38,15,0.5)]">
         <div className="flex items-center gap-3">

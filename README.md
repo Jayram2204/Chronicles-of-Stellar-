@@ -99,6 +99,44 @@ No app downloads. No chain switching. No testnet faucets. Connect your Freighter
 
 ---
 
+## How to Play
+
+### Quick Start (60 seconds)
+
+1. **Go to [chroniclesofstellar.online](https://chroniclesofstellar.online)**
+2. **Click "PLAY OFFLINE"** to try the game instantly (no wallet needed)
+3. **Explore** — walk right, fight enemies, talk to NPCs
+
+### Full Web3 Experience
+
+1. **Install [Freighter Wallet](https://freighter.app)** browser extension
+2. **Fund your wallet** with a small amount of XLM (1-5 XLM for gas + PvP)
+3. **Click "CONNECT WALLET"** on the title screen
+4. **Talk to the A.E.O.N. Merchant** (Sector 01 NPC) — say "buy passkey" to purchase the A.E.O.N. Passkey on-chain
+5. **Talk to Grid Sentinel Guard 09** (Sector 09 NPC) — say "open firewall" to unlock the next act on-chain
+6. **Enter the PvP Arena** — create a bout (1 XLM wager) or join an open bout
+7. **Fight!** — the winner's score is submitted on-chain and the loser's XLM transfers automatically
+
+### Controls
+
+| Key | Action |
+|-----|--------|
+| **Arrow Keys** | Move left/right, aim up/down |
+| **Z** | Jump |
+| **X** | Attack (punch) |
+| **C** | Special attack |
+| **P** | Pause |
+| **M** | Mute audio |
+
+### Tips
+
+- **Reputation matters** — some NPCs require minimum reputation to interact. Fight enemies and complete quests to earn rep.
+- **The A.E.O.N. Passkey** is consumed when you open the Sector 09 firewall. You'll need to buy it again if you want to replay.
+- **PvP bouts** have a 90-second timeout. If the other player doesn't respond, the bout times out and funds are refunded.
+- **AI NPCs** are powered by Gemini. They remember your conversation within a session. Be creative — they respond to your tone and requests.
+
+---
+
 ## Tech Stack
 
 | Layer | Technology | Purpose |
