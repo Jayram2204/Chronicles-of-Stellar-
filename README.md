@@ -11,6 +11,9 @@
 
 ---
 
+<img width="1236" height="834" alt="image" src="https://github.com/user-attachments/assets/db03d301-1efd-430e-b2b8-e8a2a33c7ecf" />
+
+
 ## What is Chronicles of Stellar?
 
 Chronicles of Stellar is an **8-bit browser-native PvP street brawler** built on Stellar Mainnet. Pick a fighter. Place a wager. Fight a real opponent — human or AI. Get paid instantly on-chain.
@@ -35,6 +38,9 @@ No app downloads. No chain switching. No testnet faucets. Connect your Freighter
 ---
 
 ## Features
+
+<img width="1203" height="741" alt="Screenshot 2026-07-28 at 8 08 40 AM" src="https://github.com/user-attachments/assets/e426f4bc-f534-42af-86eb-24f41a892367" />
+
 
 ### 🎮 Core Gameplay
 - **5 playable characters** — Brian (balanced), Gloria (glass cannon), Rebel (speedster), Brawler (tank), Elite (heavy hitter)
@@ -269,11 +275,7 @@ git push origin main
 - [ ] Community-built arcade sectors
 - [ ] Mobile browser optimization (touch controls)
 
----
 
-## License
-
-MIT — based on [kenamick/game-off-2017](https://github.com/kenamick/game-off-2017)
 
 ---
 
