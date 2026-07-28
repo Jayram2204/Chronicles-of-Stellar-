@@ -69,21 +69,21 @@ No app downloads. No chain switching. No testnet faucets. Connect your Freighter
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    PLAYER'S BROWSER                      │
+│                    PLAYER'S BROWSER                     │
 │                                                         │
-│  ┌──────────┐    ┌──────────┐    ┌──────────────────┐  │
+│  ┌──────────┐    ┌──────────┐    ┌──────────────────┐   │
 │  │  Phaser   │◄──►│  React   │◄──►│   Freighter      │  │
 │  │  CE 2.20  │    │  UI/HUD  │    │   Wallet API     │  │
-│  └──────────┘    └─────┬────┘    └────────┬─────────┘  │
-│                        │                   │             │
-└────────────────────────┼───────────────────┼─────────────┘
+│  └──────────┘    └─────┬────┘    └────────┬─────────┘   │
+│                        │                   │            │
+└────────────────────────┼───────────────────┼────────────┘
                          │                   │
             ┌────────────▼───────────────────▼────────────┐
-            │              STELLAR MAINNET                 │
+            │              STELLAR MAINNET                │
             │                                             │
             │  ┌──────────────────────────────────────┐   │
-            │  │  Soroban Smart Contract               │   │
-            │  │  CBFUIRK4A4FPHVBH5KGWUBMWFUT5BFWY   │   │
+            │  │  Soroban Smart Contract              │   │
+            │  │  CBFUIRK4A4FPHVBH5KGWUBMWFUT5BFWY    │   │
             │  │                                      │   │
             │  │  • Player State (rep, level, wins)   │   │
             │  │  • PvP Escrow (create → accept →     │   │
